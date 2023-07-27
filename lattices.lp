@@ -6,21 +6,9 @@
 %#show meet/4.
 %#show join/4.
 %#show maximal/2.
-%#show top/2.
+#show top/2.
 %#show minimal/2.
-%#show bot/2.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Define the original lattice. %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-lat(o).
-v(0..3).
-e(o,1,0).
-e(o,2,0).
-e(o,3,1).
-e(o,3,2).
-% achieved: represent the original lattice structure.
+#show bot/2.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Open relations for interpretation for all lattices. %
