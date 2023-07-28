@@ -15,15 +15,34 @@ This library can:
 - Decide if a given graph is a lattice
 - Find the top and bottom elements of a lattice
 - Find lattices that obey constraints you impose on a map from some original lattice
-  - e.g. Find all lattices *b* that satisfy any map from lattice *a* that preserves the joins of *a*e
-  - e.g. Find all lattices *b* that satisfy any map from lattice *a* that preserves the meets and joins of *a*. i.e. a lattice homomorphism
-  - e.g. Find all lattices *b* that satisfy any map from lattice *a* that preserves the meets and joins of *a*, and is one-to-one. i.e. a lattice ismomorphism
+  - e.g. Find all lattices *b* that satisfy any map from lattice *a* that preserves the joins of *a*
+  - e.g. Find all lattices *b* that satisfy any map from lattice *a* that preserves the meets and joins of *a*. i.e. a **lattice homomorphism**
+  - e.g. Find all lattices *b* that satisfy any map from lattice *a* that preserves the meets and joins of *a*, and is one-to-one. i.e. a **lattice ismomorphism**
 
 ## Install and Run
 
 Install `clingo` according to the [official instructions](https://github.com/potassco/clingo).
 
 Instances of specific lattices are represented in `free_dist_2.lp` and `producer_consumer.lp`. `free_dist_2.lp` represents the free distributive lattice of 2 generators, and `producer_consumer.lp` represents two unrelated nodes which are both less than some top node, and greater than some bottom node.
+
+Producer-Consumer:
+```mermaid
+stateDiagram-v2
+0 --> 1
+0 --> 2
+1 --> 3
+2 --> 3
+```
+Free Distributive Lattice of 2 Generators:
+```mermaid
+stateDiagram-v2
+0 --> 1
+1 --> 2
+1 --> 3
+2 --> 4
+3 --> 4
+4 --> 5
+```
 
 `lattices.lp` verifies that the original collection of edges specifies a lattice, `o`. It then finds a "bridgified" lattice `b` that is related to `o` such that there exists a lattice momorphism from one to the other that preserves joins, and satisfies other specific conditions. One could encode a lattice homomorphism by specifying that this morphism from `b` to `o` preserves all meets as well. The particular conditions used to specify a "bridgification" morphism are given in `lattices.lp`.
 
@@ -49,7 +68,19 @@ Calls        : 1
 Time         : 0.085s (Solving: 0.04s 1st Model: 0.02s Unsat: 0.02s)
 CPU Time     : 0.062s
 ```
-In this case, we observe that there is exactly 1 answer. Thus, there is exactly 1 lattice `b` such that applying a bridgification morphism to `b` produces `o`. In this case, lattice `b` is like lattice `o` save for an extra edge below what was the bottom, 5, in the original lattice.
+In this case, we observe that there is exactly 1 answer. Thus, there is exactly 1 lattice `b` such that applying a bridgification morphism to `b` produces `o`, when `b` has at most one more node than `o`. In this case, lattice `b` is like lattice `o` save for an extra edge below what was the bottom, 5, in the original lattice.
+
+This is a visualization of the result:
+```mermaid
+stateDiagram-v2
+0 --> 1
+1 --> 2
+1 --> 3
+2 --> 4
+3 --> 4
+4 --> 5
+5 --> 6
+```
 
 ## Origin
 
