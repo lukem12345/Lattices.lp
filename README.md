@@ -15,7 +15,9 @@ This library can:
 - Decide if a given graph is a lattice
 - Find the top and bottom elements of a lattice
 - Find lattices that obey constraints you impose on a map from some original lattice
-  - e.g. Find all lattices *b* that satisfy any map from lattice *a* that preserve the joins of *a*
+  - e.g. Find all lattices *b* that satisfy any map from lattice *a* that preserves the joins of *a*e
+  - e.g. Find all lattices *b* that satisfy any map from lattice *a* that preserves the meets and joins of *a*. i.e. a lattice homomorphism
+  - e.g. Find all lattices *b* that satisfy any map from lattice *a* that preserves the meets and joins of *a*, and is one-to-one. i.e. a lattice ismomorphism
 
 ## Install and Run
 
