@@ -9,6 +9,8 @@
 #show top/2.
 %#show minimal/2.
 #show bot/2.
+#show e/3.
+%#show v/2.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Open relations for interpretation for all lattices. %
@@ -35,10 +37,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%
 % Define leq and geq. %
 %%%%%%%%%%%%%%%%%%%%%%%
-
-% TODO: Check this rule
-e(W,X,Y) :- leq(W,X,Y), X != Y, leq(W,X,Z), leq(W,Z,Y), X != Z, Y != Z : v(W,Z).
-% achieved: an edge exists if an element is leq than another, and none is between them.
 
 leq(W,X,Y) :- e(W,X,Y).
 % achieved: an element is leq another if there is an edge from one to the other.
@@ -104,41 +102,42 @@ maximal(W,X) :- top(W,X).
 minimal(W,X) :- bot(W,X).
 % achieved: bot is minimal.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Open variables for the bridgified lattice, b. %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define rules to infer edges. %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%1 {meet(W, X, Y, Z) : v(Z)} 1 :- lat(W), v(X), v(Y).
-%% achieved: each two nodes has exactly one meet.
-%
-%1 {maximal(W, X) : v(X) } 1 :- lat(W).
-%% achieved: each lattice has exactly one maximal element.
-%
-%1 {top(W, X) : v(X) } 1 :- lat(W).
-%% achieved: each lattice has exactly one top.
-%
-%1 {join(W, X, Y, Z) : v(Z)} 1 :- lat(W), v(X), v(Y).
-%% achieved: each two nodes has exactly one join.
-%
-%1 {minimal(W, X) : v(X) } 1 :- lat(W).
-%% achieved: each lattice has exactly one minimal element.
-%
-%1 {bot(W, X) : v(X) } 1 :- lat(W).
-%% achieved: each lattice has exactly one bot.
+%e(W,X,Y) :- leq(W,X,Y), leq(W,X,Z), not leq(W,Z,Y), X != Y, X != Z, Y != Z : v(W,Z).
+%e(W,X,Y) :- leq(W,X,Y), leq(W,X,Z), not leq(W,Z,Y), X != Y, X != Z, Y != Z : v(W,Z).
+%e(W,X,Y) :- leq(W,X,Y), X != Y, leq(W,X,Z), leq(W,Z,Y), X != Z, Y != Z : v(W,Z).
+% achieved: an edge exists if an element is leq than another, and none is between them.
 
-%leq(o,0,0).
-%leq(o,1,1).
-%leq(o,2,2).
-%leq(o,3,3).
-%leq(o,1,0).
-%leq(o,2,0).
-%leq(o,3,1).
-%leq(o,3,2).
-%leq(o,3,0).
+:- leq(W,X,Y), leq(W,X,Z), leq(W,Z,Y), e(W,X,Y), X != Y, X != Z, Y != Z : v(W,Z).
+% achieved: an edge exists only if an element is leq than another, and none is between them.
+
+:- e(W,X,X).
+% achieved: no loops
+
+:- e(W,X,Y), not v(W,X).
+:- e(W,X,Y), not v(W,Y).
+% achieved: edges are only between vertices in the lattice.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Declare properties bridgification preserves. %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%meet(b,X,Y,Z) :- meet(o,X,Y,Z).
-%% achieved: bridgification preserves meets.
+lat(b).
+% achieved: b is a lattice.
+
+v(b,X) :- v(o,X).
+% achieved: a vertex in o is a vertex in b.
+
+join(b,X,Y,Z) :- join(o,X,Y,Z).
+% achieved: bridgification preserves joins.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Declare further bridgification properties. %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+:- meet(o,X,Y,A), bot(o,A), meet(b,X,Y,Z), bot(b,Z).
+% achieved: new meet of elements whose old meet was previously bot is now not bot.
+
